@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Digital Vault User Guide</title></head>
+<body><p>Loading the updated guide…</p>
+<script>
+fetch('user-guide.html').then(response => response.text()).then(source => {
+  const guide = new DOMParser().parseFromString(source, 'text/html');
+  const intro = guide.querySelector('main > p');
+  intro.textContent = 'Updated 24 November 2026. The current UK App Store versions are 3.1 for iPhone and iPad and 3.0 for Mac. iPhone and iPad version 3.1 is approved and ready for use. Early beta versions of Digital Vault for Android and Windows are in restricted testing at the moment. Apple Watch and Apple Vision Pro are outside this guide.';
+  intro.nextElementSibling.textContent = 'The Android version is a separate Android-to-Android app. Sharing or synchronisation between Apple and Android is not currently offered.';
+  for (const link of [...guide.querySelectorAll('a[href]')]) {
+    if (link.href === 'https://apps.apple.com/gb/app/digital-vault/id6797087973') link.replaceWith(guide.createTextNode(link.textContent));
+  }
+  const install = [...guide.querySelectorAll('li')].find(item => item.textContent.includes('Confirm version'));
+  if (install) install.innerHTML = install.innerHTML.replace('3.0 Build 20 on iPhone/iPad or 3.0 Build 22 on Mac', '3.1 on iPhone/iPad or 3.0 Build 22 on Mac');
+  for (const paragraph of guide.querySelectorAll('p')) {
+    if (paragraph.textContent.startsWith('Digital Vault is unlisted:')) paragraph.textContent = 'Digital Vault is unlisted and may not appear in App Store search. Installing the app does not grant access to another person’s vault. Users can maintain their own vault; access to an owner’s shared vault requires a separate private invitation.';
+  }
+  document.open();
+  document.write('<!doctype html>' + guide.documentElement.outerHTML);
+  document.close();
+}).catch(() => { document.body.textContent = 'The guide could not be loaded. Please open the current guide.'; });
+</script></body></html>
